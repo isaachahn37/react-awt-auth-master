@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import {getAllPackages} from "../services/rental-package-service";
 import authHeader from "../services/auth-header";
+import {API_URL} from "../services/constants";
 
 const BoardModerator = () => {
     const [packages, setPackages] = useState([]);
@@ -38,11 +39,11 @@ const BoardModerator = () => {
         };
 
         if (isCreating) {
-            await axios.post('http://localhost:8080/rentalpackage', packageData, {
+            await axios.post(API_URL + 'rentalpackage', packageData, {
                 headers: authHeader(),
             });
         } else {
-            await axios.put(`http://localhost:8080/rentalpackage/${selectedPackage.id}`, packageData, {
+            await axios.put(API_URL + 'rentalpackage/'+ selectedPackage.id, packageData, {
                 headers: authHeader(),
             });
         }

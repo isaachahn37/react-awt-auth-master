@@ -4,6 +4,7 @@ import {getAllPackages} from "../services/rental-package-service";
 import axios from 'axios';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem } from '@mui/material';
 import authHeader from "../services/auth-header";
+import {API_URL} from "../services/constants";
 
 const BoardUser = () => {
     const [relays, setRelays] = useState([]);
@@ -30,7 +31,7 @@ const BoardUser = () => {
         console.log('handleassign :');
         console.log(selectedPackage);
         console.log(selectedRelay);
-        await axios.post(`http://localhost:8080/relaypackageapplication`,
+        await axios.post(API_URL + 'relaypackageapplication',
             { rentalPackageId: selectedPackage, relayId: selectedRelay.id },
             {
                 headers: authHeader()
@@ -54,7 +55,7 @@ const BoardUser = () => {
     };
 
     const handleForce = async (relay) => {
-        await axios.put(`http://localhost:8080/relay/forceon`,
+        await axios.put(API_URL + 'relay/forceon',
             { relayId: relay.id },
             {
                 headers: authHeader()
@@ -72,7 +73,7 @@ const BoardUser = () => {
     };
     const handleUpdate = async () => {
         const token = localStorage.getItem('token');
-        await axios.put(`http://localhost:8080/relay/${selectedRelay.id}`,
+        await axios.put(API_URL + 'relay/'+ selectedRelay.id,
             {
                 relayName: selectedRelay.relayName,
                 relayDescription: selectedRelay.relayDescription,
