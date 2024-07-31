@@ -25,6 +25,13 @@ const BoardUser = () => {
         }
         loadRelays();
         loadPackages();
+
+        const interval = setInterval(() => {
+            loadRelays();
+            loadPackages();
+        }, 5000); //set your time here. repeat every 5 seconds
+
+        return () => clearInterval(interval);
     },[]);
 
     const handleAssignPackage = async () => {

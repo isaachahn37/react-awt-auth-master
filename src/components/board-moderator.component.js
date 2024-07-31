@@ -30,7 +30,7 @@ const BoardModerator = () => {
     };
 
     const handleSave = async () => {
-        const token = localStorage.getItem('token');
+        // const token = localStorage.getItem('token');
         const packageData = {
             packageName: selectedPackage.packageName,
             addedMinutes: selectedPackage.addedMinutes,

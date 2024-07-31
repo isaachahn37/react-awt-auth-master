@@ -76,7 +76,7 @@ class App extends Component {
             {showAdminBoard && (
                 <li className="nav-item">
                   <Link to={"/admin"} className="nav-link">
-
+                  Report
                   </Link>
                 </li>
             )}
