@@ -14,22 +14,40 @@ const BoardUser = () => {
     const [relayId, setRelayId] = useState(null);
     const [open, setOpen] = useState(false);
     const [assignOpen, setAssignOpen] = useState(false);
-    useEffect(() => {
-        async function loadRelays() {
+
+    const loadRelays = async () => {
+        try {
             const { data } = await getRelays();
             setRelays(data);
+        } catch (err) {
+            if (err.response && err.response.status === 401) {
+                this.props.router.navigate("/login");
+            } else {
+                console.error("Error loading relays:", err);
+            }
         }
-        async function loadPackages() {
+    };
+
+    const loadPackages = async () => {
+        try {
             const { data } = await getAllPackages();
             setRentalPackages(data);
+        } catch (err) {
+            if (err.response && err.response.status === 401) {
+                this.props.router.navigate("/login");
+            } else {
+                console.error("Error loading setRentalPackages:", err);
+            }
         }
+    };
+
+    useEffect(() => {
         loadRelays();
         loadPackages();
-
         const interval = setInterval(() => {
             loadRelays();
             loadPackages();
-        }, 5000); //set your time here. repeat every 5 seconds
+        }, 10000); //set your time here. repeat every 5 seconds
 
         return () => clearInterval(interval);
     },[]);
@@ -155,8 +173,8 @@ const BoardUser = () => {
                                         <td>
                                             <Button onClick={() => handleEdit(relay)}>Edit</Button>
                                             <Button onClick={() => handleAssign(relay)}>Assign Package</Button>
-                                            <Button onClick={() => handleForce(relay)}>Force Button</Button>
-                                            <Button onClick={() => handleForceOff(relay)}>Clear Billing Button</Button>
+                                            {/*<Button onClick={() => handleForce(relay)}>Force Button</Button>*/}
+                                            <Button onClick={() => handleForceOff(relay)}>Clear Billing</Button>
                                         </td>
                                     </tr>
 

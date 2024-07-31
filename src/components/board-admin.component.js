@@ -49,27 +49,27 @@ const BoardAdmin = () => {
                 <tr>
                   <th style={{textAlign: 'left', padding: '10px'}}>Date Time Applied</th>
                   <th style={{textAlign: 'left', padding: '10px'}}>Minutes Added</th>
-                  <th style={{textAlign: 'left', padding: '10px'}}>Package Name</th>
-                  <th style={{textAlign: 'left', padding: '10px'}}>Package Applied Amount</th>
                   <th style={{textAlign: 'left', padding: '10px'}}>Relay Name</th>
                   <th style={{textAlign: 'left', padding: '10px'}}>Relay Hard ID</th>
                   <th style={{textAlign: 'left', padding: '10px'}}>Relay Whitelist</th>
                   <th style={{textAlign: 'left', padding: '10px'}}>Relay Description</th>
+                  <th style={{textAlign: 'left', padding: '10px'}}>Package Name</th>
+                  <th style={{textAlign: 'left', padding: '10px'}}>Package Applied Amount</th>
                 </tr>
                 {report.packageAppliedReports.map((item) => (
                     <tr>
                       <td><p>{item.dateTimeApplied}</p></td>
                       <td><p>{item.minutesAdded}</p></td>
-                      <td><p>{item.packageName}</p></td>
-                      <td><p>Rp {item.packageAppliedAmount}</p></td>
                       <td><p>{item.relayName}</p></td>
                       <td><p>{item.relayHardId}</p></td>
                       <td><p>{item.relayWhitelist}</p></td>
                       <td><p>{item.relayDescription}</p></td>
+                      <td><p>{item.packageName}</p></td>
+                      <td><p>Rp {item.packageAppliedAmount}</p></td>
                     </tr>
                 ))}
               </table>
-              <h3>Total: {report.total}</h3>
+              <h3>Total: Rp. {report.total}</h3>
             </div>
         )}
       </div>

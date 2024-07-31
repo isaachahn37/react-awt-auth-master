@@ -4,6 +4,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } 
 import {getAllPackages} from "../services/rental-package-service";
 import authHeader from "../services/auth-header";
 import {API_URL} from "../services/constants";
+import {getRelays} from "../services/relay-service";
 
 const BoardModerator = () => {
     const [packages, setPackages] = useState([]);
@@ -11,11 +12,20 @@ const BoardModerator = () => {
     const [isDialogOpen, setDialogOpen] = useState(false);
     const [isCreating, setIsCreating] = useState(false);
 
-    useEffect(() => {
-        async function fetchAllRentalPackages() {
+    const fetchAllRentalPackages = async () => {
+        try {
             const { data } = await getAllPackages();
             setPackages(data);
+        } catch (err) {
+            if (err.response && err.response.status === 401) {
+                this.props.router.navigate("/login");
+            } else {
+                console.error("Error loading relays:", err);
+            }
         }
+    };
+
+    useEffect(() => {
         fetchAllRentalPackages();
     }, []);
     const handleDialogOpen = (pkg = null) => {
