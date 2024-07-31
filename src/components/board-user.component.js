@@ -72,7 +72,17 @@ const BoardUser = () => {
         const { data } = await getRelays();
         setRelays(data);
     }
+    const handleForceOff = async (relay) => {
+        await axios.put(API_URL + 'relay/forceoff',
+            { relayId: relay.id },
+            {
+                headers: authHeader()
+            }
+        );
 
+        const { data } = await getRelays();
+        setRelays(data);
+    }
     const handleClose = () => {
         setSelectedRelay(null);
         setOpen(false);
@@ -146,6 +156,7 @@ const BoardUser = () => {
                                             <Button onClick={() => handleEdit(relay)}>Edit</Button>
                                             <Button onClick={() => handleAssign(relay)}>Assign Package</Button>
                                             <Button onClick={() => handleForce(relay)}>Force Button</Button>
+                                            <Button onClick={() => handleForceOff(relay)}>Clear Billing Button</Button>
                                         </td>
                                     </tr>
 
