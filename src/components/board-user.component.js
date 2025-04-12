@@ -14,6 +14,10 @@ const BoardUser = () => {
     const [relayId, setRelayId] = useState(null);
     const [open, setOpen] = useState(false);
     const [assignOpen, setAssignOpen] = useState(false);
+    const [switchOpen, setSwitchOpen] = useState(false);
+    const [relayToSwitchFrom, setRelayToSwitchFrom] = useState(null);
+    const [relayToSwitchToId, setRelayToSwitchToId] = useState(null);
+
 
     const loadRelays = async () => {
         try {
@@ -170,19 +174,30 @@ const BoardUser = () => {
                                         <td style={{textAlign: 'left', padding: '10px'}}>
                                             {relay.onUntil}
                                         </td>
-                                        <td>
-                                            <Button onClick={() => handleEdit(relay)}>Edit</Button>
-                                            <Button onClick={() => handleAssign(relay)}>Assign Package</Button>
-                                            {/*<Button onClick={() => handleForce(relay)}>Force Button</Button>*/}
-                                            <Button onClick={() => handleForceOff(relay)}>Clear Billing</Button>
+                                        <td style={{ padding: '10px', whiteSpace: 'nowrap' }}>
+                                            <div style={{
+                                                display: 'flex',
+                                                gap: '4px',
+                                                flexWrap: 'nowrap',
+                                                overflowX: 'auto',
+                                                maxWidth: '300px' // or whatever works
+                                            }}>
+                                                <Button size="small" variant="outlined" onClick={() => handleEdit(relay)}>Edit</Button>
+                                                <Button size="small" variant="outlined" onClick={() => handleAssign(relay)}>Assign</Button>
+                                                <Button size="small" variant="outlined" onClick={() => handleForceOff(relay)}>Clear</Button>
+                                                <Button size="small" variant="outlined" onClick={() => {
+                                                    setRelayToSwitchFrom(relay);
+                                                    setSwitchOpen(true);
+                                                }}>Switch</Button>
+                                            </div>
                                         </td>
                                     </tr>
-
                                 ))}
                             </table>
                         </div>
 
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={open} onClose={handleClose} fullWidth
+                    maxWidth="sm">
                 <DialogTitle>Update Relay</DialogTitle>
                 <DialogContent>
                     <TextField
@@ -207,7 +222,8 @@ const BoardUser = () => {
                 </DialogActions>
             </Dialog>
 
-            <Dialog open={assignOpen} onClose={handleClose}>
+            <Dialog open={assignOpen} onClose={handleClose} fullWidth
+                    maxWidth="sm">
                 <DialogTitle>Assign Rental Package</DialogTitle>
                 <DialogContent>
                     <TextField
@@ -231,6 +247,54 @@ const BoardUser = () => {
                     <Button onClick={handleAssignPackage}>Assign</Button>
                 </DialogActions>
             </Dialog>
+            <Dialog
+                open={switchOpen}
+                onClose={() => setSwitchOpen(false)}
+                fullWidth
+                maxWidth="sm" // You can try 'md' or 'lg' if you want even wider
+            >
+                <DialogTitle>Switch OnUntil</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        fullWidth
+                        select
+                        label="Select target relay"
+                        value={relayToSwitchToId || ''}
+                        onChange={(e) => setRelayToSwitchToId(e.target.value)}
+                    >
+                        {relays
+                            .filter(r => r.id !== relayToSwitchFrom?.id)
+                            .map(r => (
+                                <MenuItem key={r.id} value={r.id}>
+                                    {r.relayName}
+                                </MenuItem>
+                            ))}
+                    </TextField>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setSwitchOpen(false)}>Cancel</Button>
+                    <Button onClick={async () => {
+                        try {
+                            await axios.put(API_URL + 'relay/switch-onuntil', {
+                                fromRelayId: relayToSwitchFrom.id,
+                                toRelayId: relayToSwitchToId
+                            }, {
+                                headers: authHeader()
+                            });
+
+                            setSwitchOpen(false);
+                            setRelayToSwitchFrom(null);
+                            setRelayToSwitchToId(null);
+                            const { data } = await getRelays();
+                            setRelays(data);
+                        } catch (err) {
+                            console.error('Switch failed', err);
+                        }
+                    }}>Switch</Button>
+                </DialogActions>
+            </Dialog>
+
+
         </div>
     );
 }
